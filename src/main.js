@@ -1,7 +1,7 @@
 ﻿import { io } from 'socket.io-client';
 import './style.css';
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+const SERVER_URL = process.env.NEXT_PUBLIC_GAME_SERVER_URL || 'http://localhost:3001';
 const app = document.querySelector('#app');
 app.innerHTML = `
 <div class="game-shell">
