@@ -35,9 +35,25 @@ Abra `http://localhost:3000`. A URL padrão do backend é `http://localhost:3001
 3. Defina `NEXT_PUBLIC_GAME_SERVER_URL` com a URL HTTPS pública do servidor multiplayer.
 4. Publique o projeto. O Next.js fornece os comandos de build e diretório de saída padrão.
 
-### Servidor multiplayer
+### Servidor multiplayer no Render
 
-Publique a pasta `server` como um Web Service Node que suporte conexões WebSocket, por exemplo no Render ou Railway. Use `npm install` como build e `npm start` como comando de início. Configure `CLIENT_ORIGIN` com a URL do frontend publicado e `PORT` conforme fornecido pelo host. A rota `/health` retorna o estado do serviço.
+O arquivo `render.yaml` já configura o servidor Node usando a pasta `server`, `npm install`, `npm start` e a verificação `/health`. O serviço precisa aceitar WebSockets; o Render Web Service oferece esse suporte.
+
+1. Envie este repositório ao GitHub.
+2. No Render, escolha **New → Blueprint**, conecte o repositório e confirme a criação do serviço `slither-arena-server`.
+3. Quando o deploy terminar, copie o domínio público do serviço, por exemplo `https://slither-arena-server.onrender.com`.
+4. Abra `https://SEU-DOMINIO/health`. A resposta deve conter `"ok":true`.
+
+### Ligar a Vercel ao servidor
+
+1. No projeto da Vercel, abra **Settings → Environment Variables**.
+2. Crie `NEXT_PUBLIC_GAME_SERVER_URL` com o domínio HTTPS do Render, sem `/health` e sem barra final. Selecione **Production** e também **Preview** se usar previews.
+3. Faça um novo deploy da Vercel. O Next.js incorpora variáveis `NEXT_PUBLIC_` no bundle durante o build.
+4. Depois que o site publicar, copie o domínio de produção da Vercel.
+5. No Render, abra o serviço e adicione `CLIENT_ORIGIN` com esse domínio exato, por exemplo `https://seu-jogo.vercel.app`. Salve e aguarde o serviço reiniciar.
+6. Abra o jogo em duas abas ou dispositivos. Ambos devem entrar na mesma arena.
+
+O servidor usa `*` como origem padrão para permitir o primeiro deploy. Depois configure `CLIENT_ORIGIN` para o domínio da Vercel. O estado do jogo fica na memória de uma instância do servidor; mantenha apenas uma instância para todos os jogadores compartilharem a mesma arena. Serviços gratuitos podem dormir quando ficam sem tráfego e demorar para responder à primeira conexão.
 
 ## Controles e responsividade
 
